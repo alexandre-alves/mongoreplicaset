@@ -1,0 +1,55 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: mongodb
+  namespace: default
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: mongodb
+  serviceName: mongodb-clusterip
+  template:
+    metadata:
+      namespace: default
+      labels:
+        app: mongodb
+    spec:
+      containers:
+        - args:
+            - '--dbpath'
+            - /data/db
+          command:
+            - mongod
+            - '--bind_ip_all'
+            - '--replSet'
+            - rs0
+          env:
+            - name: MONGO_INITDB_ROOT_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  key: user
+                  name: mongodb-secret
+            - name: MONGO_INITDB_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  key: password
+                  name: mongodb-secret
+          image: mongo:6.0.11
+          imagePullPolicy: IfNotPresent
+          name: mongodb-c
+          volumeMounts:
+            - mountPath: /data/db
+              name: mongodb-pvc
+  volumeClaimTemplates:
+    - apiVersion: v1
+      kind: PersistentVolumeClaim
+      metadata:
+        name: mongodb-pvc
+      spec:
+        accessModes:
+          - ReadWriteOnce
+        resources:
+          requests:
+            storage: 51Gi
+        storageClassName: longhorn
