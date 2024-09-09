@@ -80,6 +80,8 @@ Padrao da conexão mongodb://user:senha:host:port,host:port/?authSource=AuthDB&r
 
 OBS: Lembrando que se você não estiver com um DNS para os nomes edite o seu hosts
 
-192.168.0.21 mongodb-0.mongodb-clusterip.default.svc.cluster.local
 192.168.0.20 mongodb-1.mongodb-clusterip.default.svc.cluster.local
+
+192.168.0.21 mongodb-0.mongodb-clusterip.default.svc.cluster.local
+
 192.168.0.22 mongodb-2.mongodb-clusterip.default.svc.cluster.local
